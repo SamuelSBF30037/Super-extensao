@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../../styles.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <title>Cadastro de Elogios</title>
+</head>
+<body>
+  <!-- Conteúdo Principal -->
+  <div class="content-container">
+    <!-- Layout compacto com ação e dados -->
+    <div class="compact-layout">
+      <!-- Coluna de botões laterais -->
+      <div class="action-column">
+        <button class="action-button capture-button" id="captureButton">
+          <i class="fas fa-file-import"></i> Capturar no SEI
+        </button>
+        <button class="action-button clear-button" id="clearButtonTop">
+          <i class="fas fa-trash-alt"></i> Limpar
+        </button>
+        <button class="action-button fill-button" id="fillButton">
+          <i class="fas fa-paste"></i> Preencher no Sicad
+        </button>
+      </div>
+      
+      <!-- Coluna de dados principal -->
+      <div class="data-column">
+        <!-- Card para o texto processado -->
+        <div class="data-card">
+          <div class="card-header">
+            <div class="card-icon">
+              <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="card-title">Texto Processado</div>
+          </div>
+          <div class="card-body">
+            <textarea id="capturedText" placeholder="O texto capturado aparecerá aqui..."></textarea>
+          </div>
+        </div>
+
+        <!-- Linha de campos menores -->
+        <div class="fields-row">
+          <!-- Card para nome da autoridade -->
+          <div class="data-card">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-user-shield"></i>
+              </div>
+              <div class="card-title">Nome da Autoridade</div>
+            </div>
+            <div class="card-body">
+              <input type="text" id="autoridade" placeholder="Nome da autoridade..." />
+              <div class="field-note">Informação de acesso restrito</div>
+            </div>
+          </div>
+
+          <!-- Card para RGs -->
+          <div class="data-card">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-id-card"></i>
+              </div>
+              <div class="card-title">RGs Capturados</div>
+            </div>
+            <div class="card-body">
+              <textarea id="rgs" placeholder="RGs encontrados..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de Progresso para RGs -->
+        <div class="progress-container" id="rg-progress-container">
+          <div class="progress-info">
+            <span>Progresso:</span>
+            <span id="progress-text">0/0</span>
+          </div>
+          <div class="progress">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>

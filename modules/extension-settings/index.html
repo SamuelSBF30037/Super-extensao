@@ -1,0 +1,122 @@
+/* modules/filter-rg/index.html */
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../../styles.css" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <title>Filtrar RGs</title>
+</head>
+<body>
+  <div class="module-header">
+    <h3><i class="fas fa-filter"></i> Filtrar RGs</h3>
+    <p>Funcionalidade em desenvolvimento</p>
+  </div>
+  
+  <div class="coming-soon">
+    <img src="../../images/alert.png" alt="Em breve" class="coming-soon-img">
+    <h3>Funcionalidade em desenvolvimento</h3>
+    <p>Esta funcionalidade estará disponível em breve.</p>
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>
+
+/* modules/filter-rg/style.css */
+.module-header {
+  background-color: var(--primary-light);
+  color: white;
+  padding: 15px 20px;
+  margin: -20px -20px 20px -20px;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  box-shadow: var(--shadow);
+}
+
+.module-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.module-header p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.coming-soon-img {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+  opacity: 0.7;
+  animation: pulse 2s infinite;
+}
+
+.coming-soon h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: var(--dark);
+}
+
+.coming-soon p {
+  font-size: 16px;
+  color: var(--gray);
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+body.dark-mode .module-header {
+  background: linear-gradient(135deg, #1e1b4b, #4338ca);
+}
+
+body.dark-mode .coming-soon h3 {
+  color: var(--light);
+}
+
+body.dark-mode .coming-soon p {
+  color: var(--gray-light);
+}
+
+/* modules/filter-rg/index.js */
+/**
+ * Filter RGs Module (Placeholder)
+ */
+
+function init() {
+  // Apply dark mode if parent has it enabled
+  if (window.parent.document.body.classList.contains('dark-mode')) {
+    document.body.classList.add('dark-mode');
+  }
+  
+  // Show notification
+  if (window.parent && window.parent.showNotification) {
+    window.parent.showNotification('O módulo Filtrar RGs estará disponível em breve', 'info');
+  }
+}
+
+// Initialize the module when DOM is loaded
+document.addEventListener('DOMContentLoaded', init);
+
+/* For Other Modules */
+// Create similar placeholder files for other future modules:
+// - register-courses
+// - register-certificates 
+// - remove-spacing
+// - extension-settings
