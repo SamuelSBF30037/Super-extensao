@@ -1,206 +1,189 @@
 /**
- * Common utility functions for the extension
+ * Super DOPM - Utilitarios (v3.0)
  */
 
-/**
- * Checks if a DOM element exists
- * @param {string} selector - CSS selector to check
- * @returns {boolean} True if element exists
- */
-function elementExists(selector) {
-  return document.querySelector(selector) !== null;
-}
+window.DOPM = window.DOPM || {};
 
-/**
- * Creates a timeout promise
- * @param {number} ms - Milliseconds to wait
- * @returns {Promise} Promise that resolves after delay
- */
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+(function (global) {
+  'use strict';
 
-/**
- * Formats a date to a readable string
- * @param {Date} date - Date to format
- * @returns {string} Formatted date string
- */
-function formatDate(date) {
-  if (!date) date = new Date();
-  return date.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
-}
-
-/**
- * Sanitizes text input removing extra spaces
- * @param {string} text - Text to sanitize
- * @returns {string} Sanitized text
- */
-function sanitizeText(text) {
-  if (!text) return '';
-  
-  return text
-    .replace(/\s+/g, ' ')  // Remove extra spaces
-    .replace(/^\s+|\s+$/g, '')  // Trim start and end
-    .replace(/\n\s*\n/g, '\n'); // Remove empty lines
-}
-
-/**
- * Validates if a string is a valid RG format
- * @param {string} rg - RG to validate
- * @returns {boolean} True if valid
- */
-function isValidRG(rg) {
-  if (!rg) return false;
-  
-  // Remove dots and commas
-  const cleanRG = rg.replace(/[.,]/g, '');
-  
-  // Check if it's 5 digits
-  return /^\d{5}$/.test(cleanRG);
-}
-
-/**
- * Extracts RGs from a text according to patterns
- * @param {string} text - Text to extract RGs from
- * @param {Array} patterns - Array of regex patterns to use
- * @returns {Array} Array of valid RGs
- */
-function extractRGs(text, patterns) {
-  if (!text || !patterns || !patterns.length) return [];
-  
-  // Create regex for RGs
-  const rgRegexPattern = patterns.join('|');
-  const rgRegex = new RegExp(rgRegexPattern, 'g');
-  
-  // Extract RGs using regex
-  let rgMatches = text.match(rgRegex);
-  
-  if (!rgMatches) return [];
-  
-  // Process and validate RGs
-  return rgMatches
-    .map(rg => rg.replace(/[.,]/g, ''))
-    .filter(rg => isValidRG(rg));
-}
-
-/**
- * Saves data to chrome.storage
- * @param {Object} data - Data to save
- * @returns {Promise} Promise that resolves when data is saved
- */
-function saveToStorage(data) {
-  return new Promise((resolve, reject) => {
-    try {
-      chrome.storage.local.set(data, () => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve();
-        }
-      });
-    } catch (error) {
-      // Fallback to localStorage if chrome.storage is not available
-      try {
-        Object.keys(data).forEach(key => {
-          localStorage.setItem(key, JSON.stringify(data[key]));
-        });
-        resolve();
-      } catch (e) {
-        reject(e);
-      }
-    }
-  });
-}
-
-/**
- * Loads data from chrome.storage
- * @param {Array|string} keys - Keys to load
- * @returns {Promise} Promise that resolves with loaded data
- */
-function loadFromStorage(keys) {
-  return new Promise((resolve, reject) => {
-    try {
-      chrome.storage.local.get(keys, (result) => {
-        if (chrome.runtime.lastError) {
-          reject(chrome.runtime.lastError);
-        } else {
-          resolve(result);
-        }
-      });
-    } catch (error) {
-      // Fallback to localStorage if chrome.storage is not available
-      try {
-        const result = {};
-        if (Array.isArray(keys)) {
-          keys.forEach(key => {
-            const item = localStorage.getItem(key);
-            if (item) {
-              try {
-                result[key] = JSON.parse(item);
-              } catch (e) {
-                result[key] = item;
-              }
-            }
-          });
-        } else if (typeof keys === 'string') {
-          const item = localStorage.getItem(keys);
-          if (item) {
-            try {
-              result[keys] = JSON.parse(item);
-            } catch (e) {
-              result[keys] = item;
-            }
-          }
-        }
-        resolve(result);
-      } catch (e) {
-        reject(e);
-      }
-    }
-  });
-}
-
-/**
- * Detects the current site from a URL
- * @param {string} url - URL to check
- * @returns {string} Site type (sei, sicad, or unknown)
- */
-function detectSite(url) {
-  if (!url) return 'unknown';
-  
-  if (url.includes('sei.go.gov.br')) {
-    return 'sei';
-  } else if (url.includes('sisp.ssp.go.gov.br')) {
-    return 'sicad';
-  } else {
-    return 'unknown';
+  /**
+   * Normaliza texto para comparacao: sem acentos, maiusculo, espacos unicos.
+   * @param {string} texto
+   * @returns {string}
+   */
+  function normalizar(texto) {
+    if (!texto) return '';
+    return String(texto)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[º°ª]/g, '')
+      .toUpperCase()
+      .replace(/\s+/g, ' ')
+      .trim();
   }
-}
 
-/**
- * Generates a unique ID
- * @returns {string} Unique ID
- */
-function generateUID() {
-  return Date.now().toString(36) + Math.random().toString(36).substring(2);
-}
+  /**
+   * Colapsa espacos (inclusive os gerados por quebra de linha do SEI) e
+   * remove espacos antes de pontuacao.
+   * @param {string} texto
+   * @returns {string}
+   */
+  function colapsarEspacos(texto) {
+    if (!texto) return '';
+    return String(texto)
+      .replace(/\u00a0/g, ' ')
+      .replace(/[ \t]+/g, ' ')
+      .replace(/\s*\n\s*/g, ' ')
+      .replace(/\s+/g, ' ')
+      .replace(/\s+([,.;:!?\)])/g, '$1')
+      .replace(/\(\s+/g, '(')
+      .trim();
+  }
 
-// Export the utilities for module usage
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    elementExists,
-    delay,
-    formatDate,
-    sanitizeText,
-    isValidRG,
-    extractRGs,
-    saveToStorage,
-    loadFromStorage,
-    detectSite,
-    generateUID
+  /**
+   * Remove quebras de hifen de fim de linha ("EVADIR-\nSE" -> "EVADIRSE"),
+   * comuns no texto do SEI quando a palavra e hifenizada.
+   * @param {string} texto
+   * @returns {string}
+   */
+  function juntarHifenizados(texto) {
+    if (!texto) return '';
+    return String(texto).replace(/([A-Za-z\u00c0-\u00ff])-\s*\n\s*([A-Za-z\u00c0-\u00ff])/g, '$1$2');
+  }
+
+  /**
+   * Sanitiza o texto do elogio: joins, normalizacao e limpeza de ruido.
+   * @param {string} texto
+   * @param {{normalizarEspacos?: boolean, forcarMaiusculas?: boolean}} opcoes
+   * @returns {string}
+   */
+  function limparTexto(texto, opcoes) {
+    const cfg = opcoes || {};
+    let saida = String(texto || '');
+    saida = juntarHifenizados(saida);
+    if (cfg.normalizarEspacos !== false) saida = colapsarEspacos(saida);
+    if (cfg.forcarMaiusculas) saida = saida.toLocaleUpperCase('pt-BR');
+    return saida.trim();
+  }
+
+  /**
+   * Compila uma lista de padroes em uma unica regex alternada.
+   * @param {string[]} padroes
+   * @param {string} flags
+   * @returns {RegExp}
+   */
+  function alternar(padroes, flags) {
+    const lista = (padroes || []).map((p) => '(?:' + p + ')');
+    return new RegExp(lista.length ? lista.join('|') : '(?!x)x', flags || 'gi');
+  }
+
+  /**
+   * Escapa metacaracteres de regex.
+   * @param {string} texto
+   * @returns {string}
+   */
+  function escaparRegex(texto) {
+    return String(texto).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  /**
+   * Valida um RG PMGO (5 digitos, com ou sem separador).
+   * @param {string} rg
+   * @returns {string|null} RG normalizado ou null
+   */
+  function normalizarRG(rg) {
+    if (!rg) return null;
+    const digitos = String(rg).replace(/\D/g, '');
+    return /^\d{5}$/.test(digitos) ? digitos : null;
+  }
+
+  /**
+   * Normaliza uma lista de RGs informados manualmente (separados por
+   * virgula, ponto e virgula, espaco ou quebra de linha).
+   * @param {string} entrada
+   * @returns {string[]}
+   */
+  function normalizarListaRG(entrada) {
+    if (!entrada) return [];
+    const brutos = String(entrada).split(/[;,\n]+|\s{2,}/);
+    const saida = [];
+    brutos.forEach((bruto) => {
+      const candidatos = bruto.trim().split(/\s+/);
+      candidatos.forEach((candidato) => {
+        const rg = normalizarRG(candidato);
+        if (rg && saida.indexOf(rg) === -1) saida.push(rg);
+      });
+    });
+    return saida;
+  }
+
+  /**
+   * Remove acentos de um texto (mantendo caixa).
+   * @param {string} texto
+   * @returns {string}
+   */
+  function removerAcentos(texto) {
+    if (!texto) return '';
+    return String(texto).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  /**
+   * Cria um id curto e unico.
+   * @returns {string}
+   */
+  function gerarUID() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+
+  /**
+   * Aplica um limite de execucao a uma funcao assincrona.
+   * @param {Function} fn
+   * @param {number} ms
+   * @returns {Promise<*>}
+   */
+  function comTimeout(fn, ms) {
+    return new Promise((resolve, reject) => {
+      let concluir = false;
+      const timer = setTimeout(() => {
+        if (!concluir) reject(new Error('tempo limite de ' + ms + 'ms excedido'));
+      }, ms);
+      Promise.resolve()
+        .then(fn)
+        .then((valor) => {
+          concluir = true;
+          clearTimeout(timer);
+          resolve(valor);
+        })
+        .catch((erro) => {
+          concluir = true;
+          clearTimeout(timer);
+          reject(erro);
+        });
+    });
+  }
+
+  /**
+   * Espera um numero de milissegundos.
+   * @param {number} ms
+   * @returns {Promise<void>}
+   */
+  function esperar(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  global.DOPM.utils = {
+    normalizar: normalizar,
+    colapsarEspacos: colapsarEspacos,
+    juntarHifenizados: juntarHifenizados,
+    limparTexto: limparTexto,
+    alternar: alternar,
+    escaparRegex: escaparRegex,
+    normalizarRG: normalizarRG,
+    normalizarListaRG: normalizarListaRG,
+    removerAcentos: removerAcentos,
+    gerarUID: gerarUID,
+    comTimeout: comTimeout,
+    esperar: esperar
   };
-}
+})(window);

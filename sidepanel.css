@@ -1,0 +1,463 @@
+/* Super DOPM - Painel lateral (v3.0) */
+
+:root {
+  --sp-bg: #f4f6f9;
+  --sp-surface: #ffffff;
+  --sp-surface-2: #eef1f6;
+  --sp-texto: #16202e;
+  --sp-texto-fraco: #5b6a7d;
+  --sp-borda: #d5dce6;
+  --sp-primaria: #1d4e89;
+  --sp-primaria-texto: #ffffff;
+  --sp-ok: #1c7c4a;
+  --sp-alerta: #b3541e;
+  --sp-erro: #b02020;
+  --sp-sombra: 0 1px 3px rgba(16, 32, 56, .12);
+}
+
+[data-tema='escuro'] {
+  --sp-bg: #14181f;
+  --sp-surface: #1c222c;
+  --sp-surface-2: #232a36;
+  --sp-texto: #e8edf5;
+  --sp-texto-fraco: #9dabbe;
+  --sp-borda: #303a49;
+  --sp-primaria: #4b8fd6;
+  --sp-primaria-texto: #0d1117;
+  --sp-ok: #4cc38a;
+  --sp-alerta: #e0955b;
+  --sp-erro: #f0736d;
+  --sp-sombra: 0 1px 3px rgba(0, 0, 0, .45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+  background: var(--sp-bg);
+  color: var(--sp-texto);
+  font: 13px/1.45 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+}
+
+.sp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  background: var(--sp-primaria);
+  color: var(--sp-primaria-texto);
+}
+
+.sp-marca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.sp-logo {
+  width: 26px;
+  height: 26px;
+  border-radius: 5px;
+  background: var(--sp-surface);
+  padding: 2px;
+  flex: 0 0 auto;
+}
+
+.sp-marca-texto {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.sp-marca-texto strong {
+  font-size: 13px;
+  letter-spacing: .2px;
+}
+
+.sp-site {
+  font-size: 11px;
+  opacity: .9;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sp-icone {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, .16);
+  color: inherit;
+  cursor: pointer;
+}
+
+.sp-icone:hover {
+  background: rgba(255, 255, 255, .3);
+}
+
+.sp-icone svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.sp-status {
+  padding: 6px 10px;
+  font-size: 12px;
+  background: var(--sp-surface-2);
+  color: var(--sp-texto-fraco);
+  border-bottom: 1px solid var(--sp-borda);
+}
+
+.sp-main {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.sp-rodape {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 10px;
+  font-size: 10px;
+  color: var(--sp-texto-fraco);
+  border-top: 1px solid var(--sp-borda);
+  background: var(--sp-surface);
+}
+
+.sp-aviso {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: 26px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--sp-borda);
+  background: var(--sp-surface);
+  box-shadow: var(--sp-sombra);
+  font-size: 12px;
+}
+
+.sp-aviso[data-tipo='ok'] {
+  border-left: 3px solid var(--sp-ok);
+}
+
+.sp-aviso[data-tipo='erro'] {
+  border-left: 3px solid var(--sp-erro);
+}
+
+.sp-aviso[data-tipo='info'] {
+  border-left: 3px solid var(--sp-primaria);
+}
+
+/* ---------- Abas de modulos ---------- */
+
+.sp-abas {
+  display: flex;
+  gap: 4px;
+  padding: 6px 10px 0;
+  background: var(--sp-surface);
+  border-bottom: 1px solid var(--sp-borda);
+  overflow-x: auto;
+}
+
+.sp-aba-btn {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--sp-texto-fraco);
+  padding: 6px 8px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sp-aba-btn:hover:not(:disabled) {
+  border-color: transparent transparent var(--sp-borda);
+}
+
+.sp-aba-btn[aria-selected='true'] {
+  color: var(--sp-texto);
+  border-bottom-color: var(--sp-primaria);
+}
+
+/* ---------- Blocos do modulo ---------- */
+
+.sp-bloco {
+  background: var(--sp-surface);
+  border: 1px solid var(--sp-borda);
+  border-radius: 8px;
+  box-shadow: var(--sp-sombra);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.sp-bloco > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 7px 10px;
+  background: var(--sp-surface-2);
+  border-bottom: 1px solid var(--sp-borda);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  color: var(--sp-texto-fraco);
+}
+
+.sp-bloco .sp-corpo {
+  padding: 10px;
+}
+
+.sp-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+button {
+  font: inherit;
+  border-radius: 6px;
+  border: 1px solid var(--sp-borda);
+  background: var(--sp-surface-2);
+  color: var(--sp-texto);
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--sp-primaria);
+}
+
+button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+button.sp-primario {
+  background: var(--sp-primaria);
+  border-color: var(--sp-primaria);
+  color: var(--sp-primaria-texto);
+  font-weight: 600;
+}
+
+button.sp-perigo {
+  color: var(--sp-erro);
+}
+
+input[type='text'],
+textarea {
+  width: 100%;
+  font: inherit;
+  color: var(--sp-texto);
+  background: var(--sp-surface);
+  border: 1px solid var(--sp-borda);
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 96px;
+  line-height: 1.5;
+}
+
+input:focus,
+textarea:focus,
+button:focus-visible {
+  outline: 2px solid var(--sp-primaria);
+  outline-offset: 1px;
+}
+
+.sp-campo {
+  margin-bottom: 8px;
+}
+
+.sp-campo > label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+  color: var(--sp-texto-fraco);
+  margin-bottom: 3px;
+}
+
+.sp-campo > .sp-dica {
+  font-size: 10.5px;
+  color: var(--sp-texto-fraco);
+  margin-top: 3px;
+}
+
+/* ---------- Lista de elogios ---------- */
+
+.sp-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.sp-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  text-align: left;
+  width: 100%;
+  padding: 6px 8px;
+  background: var(--sp-surface);
+}
+
+.sp-item[aria-pressed='true'] {
+  border-color: var(--sp-primaria);
+  background: var(--sp-surface-2);
+  box-shadow: inset 3px 0 0 var(--sp-primaria);
+}
+
+.sp-item .sp-item-titulo {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.sp-item .sp-item-meta {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--sp-texto-fraco);
+}
+
+.sp-destacado {
+  border-color: var(--sp-primaria) !important;
+  box-shadow: 0 0 0 2px var(--sp-primaria) inset;
+}
+
+.sp-indice {
+  flex: 0 0 auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--sp-primaria);
+  color: var(--sp-primaria-texto);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ---------- Progresso ---------- */
+
+.sp-progresso {
+  display: none;
+  margin-top: 8px;
+}
+
+.sp-progresso[data-visivel='true'] {
+  display: block;
+}
+
+.sp-barra {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--sp-surface-2);
+  border: 1px solid var(--sp-borda);
+  overflow: hidden;
+}
+
+.sp-barra > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--sp-primaria);
+  transition: width .2s ease;
+}
+
+.sp-progresso-texto {
+  font-size: 11px;
+  color: var(--sp-texto-fraco);
+  margin-top: 3px;
+}
+
+.sp-meta-doc {
+  font-size: 11px;
+  color: var(--sp-texto-fraco);
+  margin-top: 6px;
+  word-break: break-word;
+}
+
+/* ---------- Modulos em construcao ---------- */
+
+.sp-stub {
+  text-align: center;
+  padding: 22px 12px 26px;
+}
+
+.sp-stub-logo {
+  width: 64px;
+  height: 64px;
+  opacity: .55;
+  margin-bottom: 10px;
+  animation: sp-pulse 2.4s ease-in-out infinite;
+}
+
+.sp-stub h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.sp-stub p {
+  margin: 0 auto 6px;
+  max-width: 30ch;
+  color: var(--sp-texto-fraco);
+  font-size: 12px;
+}
+
+@keyframes sp-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sp-stub-logo {
+    animation: none;
+  }
+}
+
+body.sp-ocupado .sp-main {
+  opacity: .6;
+  pointer-events: none;
+}
+
+@media (max-width: 340px) {
+  .sp-acoes button {
+    flex: 1 1 100%;
+  }
+}

@@ -1,13 +1,15 @@
 {
   "manifest_version": 3,
   "name": "Super DOPM",
-  "version": "2.0",
-  "description": "Extensão modular para extrair e processar dados do DOPM.",
+  "version": "3.0",
+  "description": "Painel lateral para extrair elogios do SEI (itens de DOPM) e cadastrar no SICAD, com inclusao automatica dos RGs.",
+  "minimum_chrome_version": "114",
   "permissions": [
     "activeTab",
     "scripting",
     "storage",
-    "tabs"
+    "tabs",
+    "sidePanel"
   ],
   "host_permissions": [
     "https://sei.go.gov.br/*",
@@ -20,20 +22,25 @@
     "128": "images/alert.png"
   },
   "action": {
-    "default_popup": "popup.html",
+    "default_title": "Super DOPM",
     "default_icon": {
       "16": "images/alert.png",
       "48": "images/alert.png",
       "128": "images/alert.png"
-    },
-    "default_title": "Super DOPM"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'; connect-src 'self' https://stive.com.br"
   },
   "web_accessible_resources": [
     {
-      "resources": ["modules/*"],
+      "resources": ["modules/*", "common/*", "images/*"],
       "matches": ["<all_urls>"]
     }
   ]

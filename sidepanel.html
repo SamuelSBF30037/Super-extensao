@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="claro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Super DOPM</title>
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <header class="sp-header">
+    <div class="sp-marca">
+      <img src="images/alert.png" alt="" class="sp-logo" />
+      <div class="sp-marca-texto">
+        <strong>Super DOPM</strong>
+        <span id="sp-site" class="sp-site">detectando site...</span>
+      </div>
+    </div>
+    <button id="sp-tema" class="sp-icone" type="button" title="Alternar tema" aria-label="Alternar tema">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z" /></svg>
+    </button>
+  </header>
+
+  <div id="sp-status" class="sp-status" hidden></div>
+
+  <main id="sp-main" class="sp-main"></main>
+
+  <footer class="sp-rodape">
+    <span id="sp-config">configuracao: -</span>
+    <span>TECNOLOGIA BAPM PMGO</span>
+  </footer>
+
+  <div id="sp-aviso" class="sp-aviso" role="status" aria-live="polite" hidden></div>
+
+  <script src="common/storage.js"></script>
+  <script src="common/utils.js"></script>
+  <script src="common/injected.js"></script>
+  <script src="common/config.js"></script>
+  <script src="modules/register-compliments/extractor.js"></script>
+  <script src="sidepanel.js"></script>
+  <script src="modules/register-compliments/panel.js"></script>
+  <script src="modules/stubs.js"></script>
+</body>
+</html>
